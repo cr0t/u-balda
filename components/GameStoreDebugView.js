@@ -11,8 +11,8 @@ const GameStoreDebugView = inject('GameStore')(observer(class GameStoreDebugView
         <Text>GameStore State</Text>
         <Text>Cells: [{GameStore.cells.join(',')}]</Text>
         <Text>Selected: [{GameStore.selectedCells.join(',')}]</Text>
-        <Text>PlayerOne: [{GameStore.playerOne.name}, {GameStore.playerOne.score}]</Text>
-        <Text>PlayerTwo: [{GameStore.playerTwo.name}, {GameStore.playerTwo.score}]</Text>
+        <Text>PlayerOne: [{GameStore.playerOne.name}, {GameStore.playerOne.score}, {GameStore.currentPlayer === GameStore.playerOne ? 'current' : ''}]</Text>
+        <Text>PlayerTwo: [{GameStore.playerTwo.name}, {GameStore.playerTwo.score}, {GameStore.currentPlayer === GameStore.playerTwo ? 'current' : ''}]</Text>
         <Text>SecondsRemaining: {GameStore.secondsRemaining}</Text>
       </View>
     );

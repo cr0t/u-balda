@@ -7,10 +7,13 @@ import {
 
 export default class PlayerView extends React.Component {
   render() {
+    const { name, score, current } = this.props;
+
     return (
       <View style={styles.container}>
-        <Text>{this.props.name}</Text>
-        <Text style={styles.score}>{this.props.score}</Text>
+        <Text>{name}</Text>
+        <Text style={styles.score}>{score}</Text>
+        <Text style={styles.turn}>{current ? 'Turn!' : ''}</Text>
       </View>
     );
   }
@@ -25,6 +28,10 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   score: {
+    fontWeight: 'bold',
+  },
+  turn: {
+    color: 'green',
     fontWeight: 'bold',
   }
 });

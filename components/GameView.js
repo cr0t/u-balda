@@ -12,14 +12,14 @@ import TimerView from './TimerView';
 const GameView = inject('GameStore')(observer(class GameView extends React.Component {
   render() {
     const { GameStore } = this.props;
-    const { playerOne, playerTwo, secondsRemaining } = GameStore;
+    const { playerOne, playerTwo, currentPlayer, secondsRemaining } = GameStore;
 
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <PlayerView name={playerOne.name} score={playerOne.score}/>
+          <PlayerView name={playerOne.name} score={playerOne.score} current={playerOne === currentPlayer}/>
           <TimerView secondsRemaining={secondsRemaining} />
-          <PlayerView name={playerTwo.name} score={playerTwo.score}/>
+          <PlayerView name={playerTwo.name} score={playerTwo.score} current={playerTwo === currentPlayer}/>
         </View>
         {/* <TurnLogger/> */}
         <BoardView/>

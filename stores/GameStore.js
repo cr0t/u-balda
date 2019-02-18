@@ -8,8 +8,9 @@ class GameStore {
 
   cells = [];
   selectedCells = [];
-  players = [];
+  players = {};
   secondsRemaining = 0;
+  moves = [];
 
   constructor() {
     this._initCells();
@@ -31,16 +32,16 @@ class GameStore {
   }
 
   _initPlayers() {
-    this.players = [
-      {
+    this.players = {
+      'A': {
         name: 'First Player',
         score: 0,
       },
-      {
+      'B': {
         name: 'A.I.',
         score: 0,
       }
-    ];
+    };
   }
 
   _initTimer() {
@@ -49,16 +50,35 @@ class GameStore {
 
   startTimer() {
     this.turnInterval = setInterval(() => {
-      this.secondsRemaining--;
+      this.secondsRemaining -= 1;
       if (this.secondsRemaining <= 0) {
-        // change turn logic goes here
-        clearInterval(this.turnInterval);
+        this.endTurn();
       }
     }, 1000);
   }
 
   stopTimer() {
     clearInterval(this.turnInterval);
+  }
+
+  resetTimer() {
+    this.secondsRemaining = this.CONFIG.turnLength;
+  }
+
+  endTurn(word = '') {
+    const currentPlayer = this.currentPlayer;
+    const cellsCount = this.CONFIG.size ** 2;
+
+    this.moves.push({
+      player: currentPlayer,
+      word: word
+    });
+
+    this.selectedCells = Array(cellsCount).fill(0);
+
+    this.stopTimer();
+    this.resetTimer();
+    this.startTimer();
   }
 
   markCellSelected(idx) {
@@ -70,11 +90,20 @@ class GameStore {
   }
 
   get playerOne() {
-    return this.players[0];
+    return this.players['A'];
   }
 
   get playerTwo() {
-    return this.players[1];
+    return this.players['B'];
+  }
+
+  get currentPlayer() {
+    if (this.moves.length % 2 == 0) {
+      return this.players['A'];
+    }
+    else {
+      return this.players['B'];
+    }
   }
 }
 
@@ -83,6 +112,7 @@ decorate(GameStore, {
   selectedCells: observable,
   players: observable,
   secondsRemaining: observable,
+  moves: observable,
 });
 
 const gameStore = new GameStore();

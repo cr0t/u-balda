@@ -61,6 +61,10 @@ class GameStore {
     clearInterval(this.turnInterval);
   }
 
+  markCellSelected(idx) {
+    this.selectedCells[idx] = 1;
+  }
+
   get fieldSize() {
     return this.CONFIG.size;
   }

@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
 
+import MatrixHelpers from '../lib/MatrixHelpers';
+
 function Cell(props) {
   const isEmpty = (props.value === '');
   const isSelected = (props.selected >= 1);
@@ -25,7 +27,30 @@ function Row(props) {
 }
 
 const BoardView = inject('GameStore')(observer(class BoardView extends React.Component {
-  onPressCell(i) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      previousCellPressed: -1
+    }
+  }
+
+  onPressCell(idx) {
+    const { previousCellPressed } = this.state;
+    const { GameStore } = this.props;
+    const fieldSize = GameStore.fieldSize;
+
+    if (previousCellPressed === -1) {
+      GameStore.markCellSelected(idx);
+      this.setState({
+        previousCellPressed: idx
+      });
+    }
+    else if (MatrixHelpers.isPossibleMove(fieldSize, previousCellPressed, idx)) {
+      GameStore.markCellSelected(idx);
+      this.setState({
+        previousCellPressed: idx
+      });
+    }
   }
 
   renderCell(i) {

@@ -8,11 +8,12 @@ import { inject, observer } from 'mobx-react';
 import BoardView from './BoardView';
 import PlayerView from './PlayerView';
 import TimerView from './TimerView';
+import MovesLogView from './MovesLogView';
 
 const GameView = inject('GameStore')(observer(class GameView extends React.Component {
   render() {
     const { GameStore } = this.props;
-    const { playerOne, playerTwo, currentPlayer, secondsRemaining } = GameStore;
+    const { playerOne, playerTwo, currentPlayer, secondsRemaining, moves } = GameStore;
 
     return (
       <View style={styles.container}>
@@ -21,7 +22,7 @@ const GameView = inject('GameStore')(observer(class GameView extends React.Compo
           <TimerView secondsRemaining={secondsRemaining} />
           <PlayerView name={playerTwo.name} score={playerTwo.score} current={playerTwo === currentPlayer}/>
         </View>
-        {/* <TurnLogger/> */}
+        <MovesLogView moves={moves}/>
         <BoardView/>
       </View>
     );

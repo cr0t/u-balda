@@ -10,7 +10,7 @@ export default class PlayerView extends React.Component {
     return (
       <View style={styles.container}>
         <Text>{this.props.name}</Text>
-        <Text style={styles.score}>{this.props.currentScore}</Text>
+        <Text style={styles.score}>{this.props.score}</Text>
       </View>
     );
   }

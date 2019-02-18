@@ -6,10 +6,17 @@ class GameStore {
   };
   cells = [];
   selectedCells = [];
+  players = [];
 
   constructor() {
     this._initCells();
-    this._initCellsDebug(); // TODO: remove this before production
+    this._initPlayers();
+    // TODO: remove this before production
+    this.cells[10] = 'б';
+    this.cells[11] = 'а';
+    this.cells[12] = 'л';
+    this.cells[13] = 'д';
+    this.cells[14] = 'а';
   }
 
   _initCells() {
@@ -19,23 +26,36 @@ class GameStore {
     this.selectedCells = Array(cellsCount).fill(0);
   }
 
-  // TODO: remove this before production
-  _initCellsDebug() {
-    this.cells[10] = 'б';
-    this.cells[11] = 'а';
-    this.cells[12] = 'л';
-    this.cells[13] = 'д';
-    this.cells[14] = 'а';
+  _initPlayers() {
+    this.players = [
+      {
+        name: 'First Player',
+        score: 0,
+      },
+      {
+        name: 'A.I.',
+        score: 0,
+      }
+    ];
   }
 
   get size() {
     return this.config.size;
+  }
+
+  get playerOne() {
+    return this.players[0];
+  }
+
+  get playerTwo() {
+    return this.players[1];
   }
 }
 
 decorate(GameStore, {
   cells: observable,
   selectedCells: observable,
+  players: observable,
 });
 
 const gameStore = new GameStore();

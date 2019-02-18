@@ -27,6 +27,10 @@ class GameStore {
     this.cells[13] = 'д';
     this.cells[14] = 'а';
   }
+
+  get size() {
+    return this.config.size;
+  }
 }
 
 decorate(GameStore, {

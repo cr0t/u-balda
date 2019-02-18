@@ -5,6 +5,7 @@ import {
   View
 } from 'react-native';
 
+import BoardView from './BoardView';
 import PlayerView from './PlayerView';
 import TimerView from './TimerView';
 
@@ -17,6 +18,8 @@ export default class GameView extends React.Component {
           <TimerView seconds='120' />
           <PlayerView name='Player A.I.' currentScore='0' />
         </View>
+        {/* <TurnLogger/> */}
+        <BoardView/>
       </View>
     );
   }

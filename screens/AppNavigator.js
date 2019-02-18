@@ -7,4 +7,7 @@ export default createAppContainer(createStackNavigator({
   Home: { screen: HomeScreen },
   Game: { screen: GameScreen },
   Settings: { screen: SettingsScreen },
-}));
+}, {
+  initialRouteName: 'Game', // for development purposes and quick access to the game
+}
+));

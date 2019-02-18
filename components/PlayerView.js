@@ -5,19 +5,12 @@ import {
   View
 } from 'react-native';
 
-import GameView from '../components/GameView';
-import GameStoreDebugView from '../components/GameStoreDebugView';
-
-export default class GameScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Game',
-  };
-
+export default class PlayerView extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <GameView/>
-        <GameStoreDebugView/>
+        <Text>{this.props.name}</Text>
+        <Text style={styles.score}>{this.props.currentScore}</Text>
       </View>
     );
   }
@@ -26,8 +19,12 @@ export default class GameScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 8,
+    paddingBottom: 8,
   },
+  score: {
+    fontWeight: 'bold',
+  }
 });

@@ -76,6 +76,8 @@ class GameStore {
 
     this.selectedCells = Array(cellsCount).fill(0);
 
+    this.updateScore(currentPlayer);
+
     this.stopTimer();
     this.resetTimer();
     this.startTimer();
@@ -83,6 +85,17 @@ class GameStore {
 
   markCellSelected(idx) {
     this.selectedCells[idx] = 1;
+  }
+
+  updateScore(player) {
+    player.score = this.moves.reduce((acc, moveData) => {
+      if (moveData['player'] === player) {
+        return acc + moveData['word'].length;
+      }
+      else {
+        return acc;
+      }
+    }, 0);
   }
 
   get fieldSize() {

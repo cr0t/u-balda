@@ -4,62 +4,32 @@ import {
   Text,
   View
 } from 'react-native';
+import { inject, observer } from 'mobx-react';
 
-function FormattedClockView(props) {
-  let seconds = props.seconds;
-  let minutes = props.minutes;
-
-  if (seconds < 10) {
-    seconds = '0' + seconds;
-  }
-
-  if (minutes < 10) {
-    minutes = '0' + minutes;
-  }
-
-  return <Text>{minutes}:{seconds}</Text>;
-}
-
-export default class TimerView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      secondsRemaining: props.seconds
-    };
-  }
-
-  tick() {
-    this.setState((state) => ({
-      secondsRemaining: state.secondsRemaining - 1
-    }));
-
-    if (this.state.secondsRemaining <= 0) {
-      clearInterval(this.tickInterval);
-    }
-  }
-
-  componentDidMount() {
-    this.tickInterval = setInterval(() => this.tick(), 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.tickInterval);
-  }
-
+const TimerView = inject('GameStore')(observer(class TimerView extends React.Component {
   render() {
-    const { secondsRemaining } = this.state;
-    const seconds = secondsRemaining % 60;
-    const minutes = (secondsRemaining - seconds) / 60;
+    const { secondsRemaining } = this.props.GameStore;
+    let seconds = secondsRemaining % 60;
+    let minutes = (secondsRemaining - seconds) / 60;
+
+    if (seconds < 10) {
+      seconds = '0' + seconds;
+    }
+
+    if (minutes < 10) {
+      minutes = '0' + minutes;
+    }
 
     return (
       <View style={styles.container}>
         <Text style={styles.clock}>
-          <FormattedClockView seconds={seconds} minutes={minutes} />
+          {minutes}:{seconds}
         </Text>
       </View>
     );
   }
-}
+}));
+export default TimerView;
 
 const styles = StyleSheet.create({
   container: {

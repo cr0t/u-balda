@@ -30,8 +30,7 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
 
   renderCell(i) {
     const { GameStore } = this.props;
-    const cells = GameStore.cells;
-    const selectedCells = GameStore.selectedCells;
+    const { cells, selectedCells } = GameStore;
 
     return (
       <Cell key={i} value={cells[i].toString()} selected={selectedCells[i]} onPress={() => this.onPressCell(i)} />
@@ -40,7 +39,7 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
 
   render() {
     const { GameStore } = this.props;
-    let size = GameStore.size;
+    let size = GameStore.fieldSize;
 
     const rows = [];
     for (let i = 0; i < size; i++) {

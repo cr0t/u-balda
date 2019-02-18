@@ -13,6 +13,7 @@ const GameStoreDebugView = inject('GameStore')(observer(class GameStoreDebugView
         <Text>Selected: [{GameStore.selectedCells.join(',')}]</Text>
         <Text>PlayerOne: [{GameStore.playerOne.name}, {GameStore.playerOne.score}]</Text>
         <Text>PlayerTwo: [{GameStore.playerTwo.name}, {GameStore.playerTwo.score}]</Text>
+        <Text>SecondsRemaining: {GameStore.secondsRemaining}</Text>
       </View>
     );
   }

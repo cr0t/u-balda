@@ -45,7 +45,7 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
     const { cells, selectedCells } = GameStore;
 
     return (
-      <Cell key={i} value={cells[i].toString()} selected={selectedCells[i]} onPress={() => this.onPressCell(i)} />
+      <Cell key={i} value={cells[i]} selected={selectedCells[i]} onPress={() => this.onPressCell(i)} />
     );
   }
 

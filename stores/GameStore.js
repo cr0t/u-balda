@@ -1,5 +1,11 @@
 import { decorate, observable, action } from 'mobx';
 
+// init vocabulary
+import Vocabulary from '../lib/Vocabulary';
+const DEFAULT_VOCABULARY = require('../data/2011freq.json');
+const vocabulary = new Vocabulary();
+vocabulary.loadWordsData(DEFAULT_VOCABULARY);
+
 class GameStore {
   CONFIG = {
     size: 5, // board 5x5
@@ -79,8 +85,11 @@ class GameStore {
       player: currentPlayer,
       word: word
     });
-    this.updateScore(currentPlayer);
 
+    this.updateScore(currentPlayer);
+    this.addWordToBoard(word);
+
+    // clear board and other temporals
     this.clearSelectedCells();
     this.stopTimer();
     this.resetTimer();
@@ -105,12 +114,30 @@ class GameStore {
   }
 
   tryWord(word) {
-    // TODO: add vocabulary check here
-    // const wordExists = ...
     const wordHasOnlyOneMoreLetter = (word.length - this.prompt.length === 1);
-    if (wordHasOnlyOneMoreLetter) {
+    const wordExists = vocabulary.exists(word);
+
+    if (wordHasOnlyOneMoreLetter && wordExists) {
       this.endTurn(word);
     }
+  }
+
+  addWordToBoard(word) {
+    const character = word.split(this.prompt).join('');
+
+    const emptyCellIndex = this.selectedCells.reduce((acc, cell, idx) => {
+      const isSelected = (cell > 1);
+      const isEmpty = (this.cells[idx] === '');
+
+      if (isSelected && isEmpty) {
+        return idx;
+      }
+      else {
+        return acc;
+      }
+    });
+
+    this.cells[emptyCellIndex] = character;
   }
 
   get fieldSize() {

@@ -6,9 +6,18 @@ import {
 } from 'react-native';
 
 function WordInfo(props) {
-  const word = props.word;
+  let word = props.word;
   const wordLength = word.toString().length;
-  return <Text>{word} ({wordLength})</Text>;
+
+  if (wordLength === 0) {
+    word = '---';
+  }
+
+  return (
+    <Text style={(wordLength === 0) && styles.emptyWord}>
+      {word} ({wordLength})
+    </Text>
+  );
 }
 
 function Column(props) {
@@ -58,5 +67,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center'
+  },
+  emptyWord: {
+    color: 'red',
   },
 });

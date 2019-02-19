@@ -8,6 +8,7 @@ class GameStore {
 
   cells = [];
   selectedCells = [];
+  previousCellPressed = -1;
   players = {};
   secondsRemaining = 0;
   moves = [];
@@ -85,6 +86,7 @@ class GameStore {
 
   markCellSelected(idx) {
     this.selectedCells[idx] = 1;
+    this.previousCellPressed = idx;
   }
 
   updateScore(player) {
@@ -123,6 +125,7 @@ class GameStore {
 decorate(GameStore, {
   cells: observable,
   selectedCells: observable,
+  previousCellPressed: observable,
   players: observable,
   secondsRemaining: observable,
   moves: observable,

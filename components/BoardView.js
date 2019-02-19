@@ -27,29 +27,16 @@ function Row(props) {
 }
 
 const BoardView = inject('GameStore')(observer(class BoardView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      previousCellPressed: -1
-    }
-  }
-
   onPressCell(idx) {
-    const { previousCellPressed } = this.state;
     const { GameStore } = this.props;
-    const fieldSize = GameStore.fieldSize;
+    const { previousCellPressed, fieldSize, selectedCells } = GameStore;
 
-    if (previousCellPressed === -1) {
+    const firstPress = (previousCellPressed === -1);
+    const possibleMove = MatrixHelpers.isPossibleMove(fieldSize, previousCellPressed, idx);
+    const notSelectedYet = (selectedCells[idx] === 0);
+
+    if (firstPress || (possibleMove && notSelectedYet)) {
       GameStore.markCellSelected(idx);
-      this.setState({
-        previousCellPressed: idx
-      });
-    }
-    else if (MatrixHelpers.isPossibleMove(fieldSize, previousCellPressed, idx)) {
-      GameStore.markCellSelected(idx);
-      this.setState({
-        previousCellPressed: idx
-      });
     }
   }
 

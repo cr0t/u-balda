@@ -2,7 +2,7 @@ import React from 'react';
 import {
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   View
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
@@ -15,9 +15,9 @@ function Cell(props) {
 
   return (
     <View style={[styles.cellContainer, isEmpty && styles.cellContainerEmpty, isSelected && styles.cellContainerSelected]}>
-      <TouchableHighlight style={styles.cellButton} onPress={props.onPress}>
-        <Text style={styles.cellText}>{props.value}{isEmpty}</Text>
-      </TouchableHighlight>
+      <TouchableOpacity style={styles.cellButton} onPress={props.onPress}>
+        <Text style={styles.cellText}>{props.value}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -49,11 +49,9 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
     );
   }
 
-  render() {
-    const { GameStore } = this.props;
-    let size = GameStore.fieldSize;
-
+  renderBoard(size) {
     const rows = [];
+
     for (let i = 0; i < size; i++) {
       const cells = [];
       for (let k = 0; k < size; k++) {
@@ -68,8 +66,18 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
       );
     }
 
+    return rows;
+  }
+
+  render() {
+    const { GameStore } = this.props;
+    const rows = this.renderBoard(GameStore.fieldSize);
+
     return (
       <View style={styles.container}>
+        <TouchableOpacity style={styles.clearButton} onPress={() => { GameStore.clearSelectedCells() }}>
+          <Text>Clear</Text>
+        </TouchableOpacity>
         {rows}
       </View>
     );
@@ -112,4 +120,11 @@ const styles = StyleSheet.create({
   cellText: {
     fontSize: 24,
   },
+  clearButton: {
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: '#F7F7F7',
+    padding: 8,
+    width: sideSize,
+  }
 });

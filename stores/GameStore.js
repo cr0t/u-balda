@@ -1,4 +1,4 @@
-import { decorate, observable } from 'mobx';
+import { decorate, observable, action } from 'mobx';
 
 class GameStore {
   CONFIG = {
@@ -66,26 +66,30 @@ class GameStore {
     this.secondsRemaining = this.CONFIG.turnLength;
   }
 
+  clearSelectedCells() {
+    const cellsCount = this.CONFIG.size ** 2;
+    this.selectedCells = Array(cellsCount).fill(0);
+    this.previousCellPressed = -1;
+  }
+
   endTurn(word = '') {
     const currentPlayer = this.currentPlayer;
-    const cellsCount = this.CONFIG.size ** 2;
 
     this.moves.push({
       player: currentPlayer,
       word: word
     });
-
-    this.selectedCells = Array(cellsCount).fill(0);
-
     this.updateScore(currentPlayer);
 
+    this.clearSelectedCells();
     this.stopTimer();
     this.resetTimer();
     this.startTimer();
   }
 
   markCellSelected(idx) {
-    this.selectedCells[idx] = 1;
+    const numAlreadySelected = this.selectedCells.filter(cell => cell > 0).length;
+    this.selectedCells[idx] = numAlreadySelected + 1;
     this.previousCellPressed = idx;
   }
 
@@ -98,6 +102,15 @@ class GameStore {
         return acc;
       }
     }, 0);
+  }
+
+  tryWord(word) {
+    // TODO: add vocabulary check here
+    // const wordExists = ...
+    const wordHasOnlyOneMoreLetter = (word.length - this.prompt.length === 1);
+    if (wordHasOnlyOneMoreLetter) {
+      this.endTurn(word);
+    }
   }
 
   get fieldSize() {
@@ -120,6 +133,34 @@ class GameStore {
       return this.players['B'];
     }
   }
+
+  get prompt() {
+    let value = [];
+    for (let i = 0; i <= this.selectedCells.length - 1; i++) {
+      if (this.selectedCells[i] != 0) {
+        value[this.selectedCells[i] - 1] = this.cells[i];
+      }
+    }
+    return value.join('');
+  }
+
+  get readyForTry() {
+    const numAlreadySelected = this.selectedCells.filter(cell => cell > 0).length;
+    const selectedHasExactlyOneEmpty = this.selectedCells.map((cell, idx) => {
+      if (cell > 0 && this.cells[idx] === '') {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    }).filter(el => el === 1).length === 1;
+
+    if (numAlreadySelected > 2 && selectedHasExactlyOneEmpty) {
+      return true;
+    }
+
+    return false;
+  }
 }
 
 decorate(GameStore, {
@@ -129,6 +170,7 @@ decorate(GameStore, {
   players: observable,
   secondsRemaining: observable,
   moves: observable,
+  endTurn: action
 });
 
 const gameStore = new GameStore();

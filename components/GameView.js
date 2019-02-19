@@ -9,6 +9,7 @@ import BoardView from './BoardView';
 import PlayerView from './PlayerView';
 import TimerView from './TimerView';
 import MovesLogView from './MovesLogView';
+import PromptModalView from './PromptModalView';
 
 const GameView = inject('GameStore')(observer(class GameView extends React.Component {
   render() {
@@ -18,12 +19,13 @@ const GameView = inject('GameStore')(observer(class GameView extends React.Compo
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <PlayerView name={playerOne.name} score={playerOne.score} current={playerOne === currentPlayer}/>
+          <PlayerView name={playerOne.name} score={playerOne.score} current={playerOne === currentPlayer} />
           <TimerView secondsRemaining={secondsRemaining} />
-          <PlayerView name={playerTwo.name} score={playerTwo.score} current={playerTwo === currentPlayer}/>
+          <PlayerView name={playerTwo.name} score={playerTwo.score} current={playerTwo === currentPlayer} />
         </View>
-        <MovesLogView moves={moves}/>
-        <BoardView/>
+        <MovesLogView moves={moves} />
+        <BoardView />
+        <PromptModalView />
       </View>
     );
   }

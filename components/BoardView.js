@@ -89,6 +89,7 @@ const sideSize = 64; // magic!
 const styles = StyleSheet.create({
   container: {
     paddingTop: 1,
+    marginBottom: sideSize / 2,
   },
   row: {
     flexDirection: 'row',

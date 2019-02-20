@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 
 import GameView from '../components/GameView';
-import GameStoreDebugView from '../components/GameStoreDebugView';
 
 export default class GameScreen extends React.Component {
   static navigationOptions = {
@@ -17,7 +16,6 @@ export default class GameScreen extends React.Component {
     return (
       <View style={styles.container}>
         <GameView/>
-        <GameStoreDebugView/>
       </View>
     );
   }

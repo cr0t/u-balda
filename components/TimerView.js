@@ -33,9 +33,7 @@ export default TimerView;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   clock: {
     fontWeight: 'bold',

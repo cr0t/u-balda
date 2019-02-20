@@ -5,6 +5,8 @@ import {
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
 
+import GameStoreDebugView from '../components/GameStoreDebugView';
+
 import BoardView from './Board/BoardView';
 import PlayerView from './PlayerView';
 import TimerView from './TimerView';
@@ -19,13 +21,24 @@ const GameView = inject('GameStore')(observer(class GameView extends React.Compo
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <PlayerView name={playerOne.name} score={playerOne.score} current={playerOne === currentPlayer} />
-          <TimerView secondsRemaining={secondsRemaining} />
-          <PlayerView name={playerTwo.name} score={playerTwo.score} current={playerTwo === currentPlayer} />
+          <View style={styles.headerItem}>
+            <PlayerView name={playerOne.name} score={playerOne.score} current={playerOne === currentPlayer} />
+          </View>
+          <View style={styles.headerItem}>
+            <TimerView secondsRemaining={secondsRemaining} />
+          </View>
+          <View style={styles.headerItem}>
+            <PlayerView name={playerTwo.name} score={playerTwo.score} current={playerTwo === currentPlayer} />
+          </View>
         </View>
-        <MovesLogView moves={moves} />
-        <BoardView />
+        <View style={styles.moves}>
+          <MovesLogView moves={moves} />
+        </View>
+        <View style={styles.board}>
+          <BoardView />
+        </View>
         <PromptModalView />
+        {/* <GameStoreDebugView/> */}
       </View>
     );
   }
@@ -34,12 +47,22 @@ export default GameView;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    marginHorizontal: 20,
+    marginVertical: 20,
   },
   header: {
+    flex: 0,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    paddingBottom: 20,
+  },
+  headerItem: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  moves: {
+    flex: 1,
+  },
+  board: {
+    flex: 0,
   }
 });

@@ -57,11 +57,9 @@ export default class MovesLogView extends React.Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'flex-start',
-    flex: 1,
+    height: 50,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 8,
-    paddingBottom: 8,
   },
   column: {
     flex: 1,

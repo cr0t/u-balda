@@ -21,13 +21,12 @@ export default function ClearButton(props) {
   );
 }
 
-const sideSize = 64; // TODO: do something with that magic
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     backgroundColor: '#F7F7F7',
-    padding: 8,
-    width: sideSize,
+    padding: 10,
+    width: 60,
   },
   hidden: {
     display: 'none',

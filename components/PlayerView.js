@@ -21,11 +21,7 @@ export default class PlayerView extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 8,
-    paddingBottom: 8,
   },
   score: {
     fontWeight: 'bold',

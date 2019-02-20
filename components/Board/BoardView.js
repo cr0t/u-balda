@@ -102,7 +102,7 @@ export default BoardView;
 const styles = StyleSheet.create({
   container: {
     paddingTop: 1,
-    marginBottom: 32,
+    paddingLeft: 1,
   },
   header: {
     alignItems: 'flex-end',

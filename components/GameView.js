@@ -11,12 +11,13 @@ import BoardView from './Board/BoardView';
 import PlayerView from './PlayerView';
 import TimerView from './TimerView';
 import MovesLogView from './MovesLogView';
-import PromptModalView from './PromptModalView';
+import PromptModalView from './Prompt/PromptModalView';
 
 const GameView = inject('GameStore')(observer(class GameView extends React.Component {
   render() {
     const { GameStore } = this.props;
-    const { playerOne, playerTwo, currentPlayer, secondsRemaining, moves } = GameStore;
+    const { playerOne, playerTwo, currentPlayer, secondsRemaining, moves, readyForTry, showPromptDialog } = GameStore;
+    const showPromptModal = (readyForTry && showPromptDialog);
 
     return (
       <View style={styles.container}>
@@ -37,7 +38,7 @@ const GameView = inject('GameStore')(observer(class GameView extends React.Compo
         <View style={styles.board}>
           <BoardView />
         </View>
-        <PromptModalView />
+        {showPromptModal ? <PromptModalView /> : null}
         {/* <GameStoreDebugView/> */}
       </View>
     );

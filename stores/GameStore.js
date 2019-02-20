@@ -79,7 +79,7 @@ class GameStore {
     this.previousCellPressed = -1;
   }
 
-  endTurn(word = '') {
+  endTurn(word = '', singleChar = '') {
     const currentPlayer = this.currentPlayer;
 
     this.moves.push({
@@ -88,7 +88,7 @@ class GameStore {
     });
 
     this.updateScore(currentPlayer);
-    this.addWordToBoard(word);
+    this.addCharToBoard(singleChar);
 
     // clear board and other temporals
     this.closePromptDialog();
@@ -115,20 +115,18 @@ class GameStore {
     }, 0);
   }
 
-  tryWord(word) {
-    const wordHasOnlyOneMoreLetter = (word.length - this.prompt.length === 1);
+  tryWord(word, singleChar) {
     const wordExists = vocabulary.exists(word);
+    const usedWord = this.moves.map((m) => { return m['word'] }).includes(word);
 
-    if (wordHasOnlyOneMoreLetter && wordExists) {
-      this.endTurn(word);
+    if (wordExists && !usedWord) {
+      this.endTurn(word, singleChar);
     }
   }
 
-  addWordToBoard(word) {
-    const character = word.split(this.prompt).join('');
-
+  addCharToBoard(character) {
     const emptyCellIndex = this.selectedCells.reduce((acc, cell, idx) => {
-      const isSelected = (cell > 1);
+      const isSelected = (cell >= 1);
       const isEmpty = (this.cells[idx] === '');
 
       if (isSelected && isEmpty) {
@@ -137,12 +135,13 @@ class GameStore {
       else {
         return acc;
       }
-    });
+    }, 0);
 
     this.cells[emptyCellIndex] = character;
   }
 
   closePromptDialog() {
+    this.clearSelectedCells();
     this.showPromptDialog = false;
   }
 
@@ -174,11 +173,9 @@ class GameStore {
   get prompt() {
     let value = [];
     for (let i = 0; i <= this.selectedCells.length - 1; i++) {
-      if (this.selectedCells[i] != 0) {
-        value[this.selectedCells[i] - 1] = this.cells[i];
-      }
+      value[this.selectedCells[i] - 1] = this.cells[i];
     }
-    return value.join('');
+    return value;
   }
 
   get readyForTry() {

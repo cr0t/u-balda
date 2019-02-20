@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
 
-import BoardView from './BoardView';
+import BoardView from './Board/BoardView';
 import PlayerView from './PlayerView';
 import TimerView from './TimerView';
 import MovesLogView from './MovesLogView';

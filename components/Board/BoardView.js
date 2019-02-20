@@ -1,58 +1,15 @@
 import React from 'react';
 import {
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
 
-import MatrixHelpers from '../lib/MatrixHelpers';
+import MatrixHelpers from '../../lib/MatrixHelpers';
 
-function Cell(props) {
-  const isEmpty = (props.value === '');
-  const isSelected = props.selected;
-  const showTryLabel = (props.justPressed && props.readyForTry);
-
-  const cellStyle = [
-    styles.cell,
-    isEmpty && styles.cellEmpty,
-    isSelected && styles.cellSelected,
-    showTryLabel && styles.cellTryShown,
-  ];
-
-  const textStyle = [
-    styles.cellText,
-    showTryLabel && styles.cellTryText,
-  ];
-
-  return (
-    <View style={cellStyle}>
-      <TouchableOpacity style={styles.cellButton} onPress={props.onPress}>
-        <Text style={textStyle}>
-          {showTryLabel ? 'Try!' : props.value}
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function Row(props) {
-  return <View style={styles.row}>{props.children}</View>;
-}
-
-function ClearButton(props) {
-  const buttonStyle = [
-    styles.clearButton,
-    props.isHidden && styles.clearButtonHidden,
-  ];
-
-  return (
-    <TouchableOpacity style={buttonStyle} onPress={props.onPress}>
-      <Text>Clear</Text>
-    </TouchableOpacity>
-  );
-}
+import ClearButton from './ClearButton';
+import Row from './Row';
+import Cell from './Cell';
 
 const BoardView = inject('GameStore')(observer(class BoardView extends React.Component {
   onPressCell(idx) {
@@ -104,13 +61,13 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
     );
   }
 
-  renderBoard(size) {
+  renderBoard(fieldSize) {
     const rows = [];
 
-    for (let i = 0; i < size; i++) {
+    for (let i = 0; i < fieldSize; i++) {
       const cells = [];
-      for (let k = 0; k < size; k++) {
-        cellId = i * size + k;
+      for (let k = 0; k < fieldSize; k++) {
+        cellId = i * fieldSize + k;
         cells.push(this.renderCell(cellId));
       }
 
@@ -127,7 +84,6 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
   render() {
     const { GameStore } = this.props;
     const { selectedCellsCount, fieldSize } = GameStore;
-
     const hideClearButton = (selectedCellsCount === 0);
     const rows = this.renderBoard(fieldSize);
 
@@ -143,66 +99,19 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
 }));
 export default BoardView;
 
-const sideSize = 64; // magic!
 const styles = StyleSheet.create({
   container: {
     paddingTop: 1,
-    marginBottom: sideSize / 2,
+    marginBottom: 32,
   },
   header: {
     alignItems: 'flex-end',
   },
-  clearButton: {
-    alignItems: 'center',
-    backgroundColor: '#F7F7F7',
-    padding: 8,
-    width: sideSize,
-  },
-  clearButtonHidden: {
-    display: 'none',
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  cell: {
-    width: sideSize,
-    height: sideSize,
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderColor: 'lightgray',
-    borderWidth: 1,
-    marginLeft: -1,
-    marginTop: -1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cellEmpty: {
-    backgroundColor: 'beige',
-  },
-  cellSelected: {
-    backgroundColor: 'pink',
-  },
-  cellTryShown: {
-    backgroundColor: 'magenta',
-  },
-  cellButton: {
-    width: sideSize,
-    height: sideSize,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cellText: {
-    fontSize: 24,
-  },
-  cellTryText: {
-    color: '#fff',
-    fontSize: 18,
-  },
 });
 
-/*
- * Some additional helpers for the users' selection logic
- */
+//
+// Some additional helpers for the users' selection logic
+//
 
 function areAllNeighboursEmpty(fieldSize, idx, cells) {
   const neighbours = MatrixHelpers.crossNeighbours(fieldSize, idx);

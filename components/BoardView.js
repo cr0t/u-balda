@@ -57,18 +57,32 @@ function ClearButton(props) {
 const BoardView = inject('GameStore')(observer(class BoardView extends React.Component {
   onPressCell(idx) {
     const { GameStore } = this.props;
-    const { previousCellPressed, fieldSize, selectedCells, readyForTry } = GameStore;
+    const { previousCellPressed, fieldSize, cells, selectedCells, readyForTry } = GameStore;
 
     const firstPress = (previousCellPressed === -1);
     const possibleMove = MatrixHelpers.isPossibleMove(fieldSize, previousCellPressed, idx);
     const notSelectedYet = (selectedCells[idx] === 0);
+    const isEmpty = (cells[idx] === '');
+    const neighboursEmpty = areAllNeighboursEmpty(fieldSize, idx, cells);
+    const alreadyHasEmptySelected = selectedCellsContainsOneEmpty(selectedCells, cells);
+    const pressedTwice = (previousCellPressed === idx);
+
+    if (pressedTwice && readyForTry) {
+      GameStore.openPromptDialog();
+      return;
+    }
+
+    if (firstPress && neighboursEmpty) {
+      return;
+    }
+
+    if (isEmpty && alreadyHasEmptySelected) {
+      return;
+    }
 
     if (firstPress || (possibleMove && notSelectedYet)) {
       GameStore.markCellSelected(idx);
-    }
-
-    if (previousCellPressed === idx && readyForTry) {
-      GameStore.openPromptDialog();
+      return;
     }
   }
 
@@ -185,3 +199,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+/*
+ * Some additional helpers for the users' selection logic
+ */
+
+function areAllNeighboursEmpty(fieldSize, idx, cells) {
+  const neighbours = MatrixHelpers.crossNeighbours(fieldSize, idx);
+  const nonEmptyCount = neighbours.map(idx => cells[idx]).filter(v => v !== '').length;
+  return (nonEmptyCount === 0);
+}
+
+function selectedCellsContainsOneEmpty(selectedCells, cells) {
+  const countSelectedEmptyCells = selectedCells.reduce((acc, cell, idx) => {
+    if (cell > 0 && cells[idx] === '') {
+      return acc += 1;
+    }
+
+    return acc;
+  }, 0);
+
+  return (countSelectedEmptyCells === 1);
+}

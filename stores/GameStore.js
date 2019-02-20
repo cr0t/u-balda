@@ -192,7 +192,7 @@ class GameStore {
       }
     }).filter(el => el === 1).length === 1;
 
-    if (numAlreadySelected > 2 && selectedHasExactlyOneEmpty) {
+    if (numAlreadySelected > 1 && selectedHasExactlyOneEmpty) {
       return true;
     }
 

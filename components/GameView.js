@@ -14,6 +14,13 @@ import MovesLogView from './MovesLogView';
 import PromptModalView from './Prompt/PromptModalView';
 
 const GameView = inject('GameStore')(observer(class GameView extends React.Component {
+  componentDidMount() {
+    const { GameStore } = this.props;
+    const word = GameStore.vocabulary.getRandomWord(GameStore.fieldSize);
+
+    GameStore.startGame(word);
+  }
+
   render() {
     const { GameStore } = this.props;
     const { playerOne, playerTwo, currentPlayer, secondsRemaining, moves, readyForTry, showPromptDialog } = GameStore;

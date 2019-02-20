@@ -1,16 +1,13 @@
 import { decorate, observable, action, computed } from 'mobx';
 
-// init vocabulary
-import Vocabulary from '../lib/Vocabulary';
-const DEFAULT_VOCABULARY = require('../data/2011freq.json');
-const vocabulary = new Vocabulary();
-vocabulary.loadWordsData(DEFAULT_VOCABULARY);
-
 class GameStore {
   CONFIG = {
-    size: 5, // board 5x5
+    size: 6,
     turnLength: 120, // seconds
   };
+
+  initialWord = '';
+  vocabulary; // configure it from outside
 
   cells = [];
   selectedCells = [];
@@ -23,13 +20,6 @@ class GameStore {
   constructor() {
     this._initCells();
     this._initPlayers();
-    this._initTimer();
-    // TODO: remove this before production
-    this.cells[10] = 'б';
-    this.cells[11] = 'а';
-    this.cells[12] = 'л';
-    this.cells[13] = 'д';
-    this.cells[14] = 'а';
   }
 
   _initCells() {
@@ -52,11 +42,7 @@ class GameStore {
     };
   }
 
-  _initTimer() {
-    this.secondsRemaining = this.CONFIG.turnLength;
-  }
-
-  startTimer() {
+  _startTimer() {
     this.turnInterval = setInterval(() => {
       this.secondsRemaining -= 1;
       if (this.secondsRemaining <= 0) {
@@ -65,11 +51,11 @@ class GameStore {
     }, 1000);
   }
 
-  stopTimer() {
+  _stopTimer() {
     clearInterval(this.turnInterval);
   }
 
-  resetTimer() {
+  _resetTimer() {
     this.secondsRemaining = this.CONFIG.turnLength;
   }
 
@@ -77,6 +63,31 @@ class GameStore {
     const cellsCount = this.CONFIG.size ** 2;
     this.selectedCells = Array(cellsCount).fill(0);
     this.previousCellPressed = -1;
+  }
+
+  startGame(initialWord) {
+    this.initialWord = initialWord;
+
+    const initialWordAsArray = initialWord.split('');
+    let idxDelta = Math.floor(this.fieldSize / 2) * this.fieldSize;
+    if (this.fieldSize % 2 === 0) {
+      idxDelta -= this.fieldSize;
+    }
+
+    initialWordAsArray.forEach((char, idx) => {
+      this.cells[idx + idxDelta] = char;
+    });
+
+    this.startTurn();
+  }
+
+  startTurn() {
+    // clear board and other temporals
+    this.closePromptDialog();
+    this.clearSelectedCells();
+    this._stopTimer();
+    this._resetTimer();
+    this._startTimer();
   }
 
   endTurn(word = '', singleChar = '') {
@@ -87,15 +98,20 @@ class GameStore {
       word: word
     });
 
-    this.updateScore(currentPlayer);
-    this.addCharToBoard(singleChar);
+    this._updateScore(currentPlayer);
+    this._addCharToBoard(singleChar);
+    this.startTurn();
+  }
 
-    // clear board and other temporals
-    this.closePromptDialog();
-    this.clearSelectedCells();
-    this.stopTimer();
-    this.resetTimer();
-    this.startTimer();
+  tryWord(word, singleChar) {
+    const wordExists = this.vocabulary.exists(word);
+    const usedWord = this.moves.map((m) => { return m['word'] }).includes(word);
+    const usedAsInitial = (word === this.initialWord);
+    const usedYet = (usedWord || usedAsInitial);
+
+    if (wordExists && !usedYet) {
+      this.endTurn(word, singleChar);
+    }
   }
 
   markCellSelected(idx) {
@@ -104,7 +120,7 @@ class GameStore {
     this.previousCellPressed = idx;
   }
 
-  updateScore(player) {
+  _updateScore(player) {
     player.score = this.moves.reduce((acc, moveData) => {
       if (moveData['player'] === player) {
         return acc + moveData['word'].length;
@@ -115,16 +131,7 @@ class GameStore {
     }, 0);
   }
 
-  tryWord(word, singleChar) {
-    const wordExists = vocabulary.exists(word);
-    const usedWord = this.moves.map((m) => { return m['word'] }).includes(word);
-
-    if (wordExists && !usedWord) {
-      this.endTurn(word, singleChar);
-    }
-  }
-
-  addCharToBoard(character) {
+  _addCharToBoard(character) {
     const emptyCellIndex = this.selectedCells.reduce((acc, cell, idx) => {
       const isSelected = (cell >= 1);
       const isEmpty = (this.cells[idx] === '');
@@ -209,7 +216,12 @@ decorate(GameStore, {
   secondsRemaining: observable,
   moves: observable,
   showPromptDialog: observable,
-  endTurn: action
+  markCellSelected: action,
+  startGame: action,
+  startTurn: action,
+  endTurn: action,
+  closePromptDialog: action,
+  openPromptDialog: action,
 });
 
 const gameStore = new GameStore();

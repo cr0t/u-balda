@@ -34,7 +34,7 @@ export default function Cell(props) {
   );
 }
 
-const sideSize = 68; // TODO: do something with that magic
+const sideSize = 62; // TODO: do something with that magic
 const styles = StyleSheet.create({
   cell: {
     width: sideSize,

@@ -72,20 +72,20 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
     }
   }
 
-  renderCell(i) {
+  renderCell(idx) {
     const { GameStore } = this.props;
     const { cells, selectedCells, previousCellPressed, readyForTry } = GameStore;
-    const justPressed = (previousCellPressed === i);
-    const isSelected = (selectedCells[i] >= 1);
+    const justPressed = (previousCellPressed === idx);
+    const isSelected = (selectedCells[idx] >= 1);
 
     return (
       <Cell
-        key={i}
-        value={cells[i]}
+        key={'cell-' + idx}
+        value={cells[idx]}
         selected={isSelected}
         justPressed={justPressed}
         readyForTry={readyForTry}
-        onPress={() => this.onPressCell(i)}
+        onPress={() => this.onPressCell(idx)}
       />
     );
   }
@@ -101,7 +101,7 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
       }
 
       rows.push(
-        <Row key={i}>
+        <Row key={'row-' + i}>
           {cells}
         </Row>
       );

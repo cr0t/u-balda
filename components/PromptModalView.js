@@ -3,6 +3,7 @@ import {
   Button,
   Modal,
   StyleSheet,
+  Text,
   TextInput,
   View
 } from 'react-native';
@@ -18,22 +19,23 @@ const PromptModalView = inject('GameStore')(observer(class PromptModalView exten
 
   render() {
     const { GameStore } = this.props;
-    const { prompt, readyForTry, secondsRemaining } = GameStore;
+    const { secondsRemaining, prompt, readyForTry, showPromptDialog } = GameStore;
     const { guess } = this.state;
-    const confirmDisabled = ((guess.length - prompt.length) !== 1);
+    const confirmDisabled = (guess.length === 0);
 
     return (
       <View>
-        <Modal visible={readyForTry}>
+        <Modal visible={readyForTry && showPromptDialog}>
           <View style={styles.header}>
             <TimerView secondsRemaining={secondsRemaining} />
           </View>
           <View style={styles.container}>
-            <TextInput style={styles.input} autoFocus={true} defaultValue={prompt} onChangeText={(guess) => this.setState({ guess: guess.trim() })} />
+            <Text>You selected: {prompt}</Text>
+            <TextInput style={styles.input} autoCapitalize='none' autoFocus={true} maxLength={1} onChangeText={(guess) => this.setState({ guess: guess.trim() })} />
           </View>
           <View style={styles.footer}>
             <Button title="Guess!" disabled={confirmDisabled} onPress={() => GameStore.tryWord(guess)} />
-            <Button title="Cancel" onPress={() => GameStore.clearSelectedCells()} />
+            <Button title="Cancel" onPress={() => { GameStore.clearSelectedCells(); GameStore.closePromptDialog(); }} />
           </View>
         </Modal>
       </View>

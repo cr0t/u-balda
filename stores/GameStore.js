@@ -1,4 +1,4 @@
-import { decorate, observable, action } from 'mobx';
+import { decorate, observable, action, computed } from 'mobx';
 
 // init vocabulary
 import Vocabulary from '../lib/Vocabulary';
@@ -18,6 +18,7 @@ class GameStore {
   players = {};
   secondsRemaining = 0;
   moves = [];
+  showPromptDialog = false;
 
   constructor() {
     this._initCells();
@@ -90,6 +91,7 @@ class GameStore {
     this.addWordToBoard(word);
 
     // clear board and other temporals
+    this.closePromptDialog();
     this.clearSelectedCells();
     this.stopTimer();
     this.resetTimer();
@@ -140,6 +142,14 @@ class GameStore {
     this.cells[emptyCellIndex] = character;
   }
 
+  closePromptDialog() {
+    this.showPromptDialog = false;
+  }
+
+  openPromptDialog() {
+    this.showPromptDialog = true;
+  }
+
   get fieldSize() {
     return this.CONFIG.size;
   }
@@ -188,6 +198,10 @@ class GameStore {
 
     return false;
   }
+
+  get selectedCellsCount() {
+    return this.selectedCells.filter(cell => cell >= 1).length;
+  }
 }
 
 decorate(GameStore, {
@@ -197,6 +211,7 @@ decorate(GameStore, {
   players: observable,
   secondsRemaining: observable,
   moves: observable,
+  showPromptDialog: observable,
   endTurn: action
 });
 

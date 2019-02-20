@@ -11,12 +11,27 @@ import MatrixHelpers from '../lib/MatrixHelpers';
 
 function Cell(props) {
   const isEmpty = (props.value === '');
-  const isSelected = (props.selected >= 1);
+  const isSelected = props.selected;
+  const showTryLabel = (props.justPressed && props.readyForTry);
+
+  const cellStyle = [
+    styles.cell,
+    isEmpty && styles.cellEmpty,
+    isSelected && styles.cellSelected,
+    showTryLabel && styles.cellTryShown,
+  ];
+
+  const textStyle = [
+    styles.cellText,
+    showTryLabel && styles.cellTryText,
+  ];
 
   return (
-    <View style={[styles.cellContainer, isEmpty && styles.cellContainerEmpty, isSelected && styles.cellContainerSelected]}>
+    <View style={cellStyle}>
       <TouchableOpacity style={styles.cellButton} onPress={props.onPress}>
-        <Text style={styles.cellText}>{props.value}</Text>
+        <Text style={textStyle}>
+          {showTryLabel ? 'Try!' : props.value}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -26,10 +41,23 @@ function Row(props) {
   return <View style={styles.row}>{props.children}</View>;
 }
 
+function ClearButton(props) {
+  const buttonStyle = [
+    styles.clearButton,
+    props.isHidden && styles.clearButtonHidden,
+  ];
+
+  return (
+    <TouchableOpacity style={buttonStyle} onPress={props.onPress}>
+      <Text>Clear</Text>
+    </TouchableOpacity>
+  );
+}
+
 const BoardView = inject('GameStore')(observer(class BoardView extends React.Component {
   onPressCell(idx) {
     const { GameStore } = this.props;
-    const { previousCellPressed, fieldSize, selectedCells } = GameStore;
+    const { previousCellPressed, fieldSize, selectedCells, readyForTry } = GameStore;
 
     const firstPress = (previousCellPressed === -1);
     const possibleMove = MatrixHelpers.isPossibleMove(fieldSize, previousCellPressed, idx);
@@ -38,14 +66,27 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
     if (firstPress || (possibleMove && notSelectedYet)) {
       GameStore.markCellSelected(idx);
     }
+
+    if (previousCellPressed === idx && readyForTry) {
+      GameStore.openPromptDialog();
+    }
   }
 
   renderCell(i) {
     const { GameStore } = this.props;
-    const { cells, selectedCells } = GameStore;
+    const { cells, selectedCells, previousCellPressed, readyForTry } = GameStore;
+    const justPressed = (previousCellPressed === i);
+    const isSelected = (selectedCells[i] >= 1);
 
     return (
-      <Cell key={i} value={cells[i]} selected={selectedCells[i]} onPress={() => this.onPressCell(i)} />
+      <Cell
+        key={i}
+        value={cells[i]}
+        selected={isSelected}
+        justPressed={justPressed}
+        readyForTry={readyForTry}
+        onPress={() => this.onPressCell(i)}
+      />
     );
   }
 
@@ -71,13 +112,16 @@ const BoardView = inject('GameStore')(observer(class BoardView extends React.Com
 
   render() {
     const { GameStore } = this.props;
-    const rows = this.renderBoard(GameStore.fieldSize);
+    const { selectedCellsCount, fieldSize } = GameStore;
+
+    const hideClearButton = (selectedCellsCount === 0);
+    const rows = this.renderBoard(fieldSize);
 
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.clearButton} onPress={() => { GameStore.clearSelectedCells() }}>
-          <Text>Clear</Text>
-        </TouchableOpacity>
+        <View style={styles.header}>
+          <ClearButton isHidden={hideClearButton} onPress={() => GameStore.clearSelectedCells()}/>
+        </View>
         {rows}
       </View>
     );
@@ -91,10 +135,22 @@ const styles = StyleSheet.create({
     paddingTop: 1,
     marginBottom: sideSize / 2,
   },
+  header: {
+    alignItems: 'flex-end',
+  },
+  clearButton: {
+    alignItems: 'center',
+    backgroundColor: '#F7F7F7',
+    padding: 8,
+    width: sideSize,
+  },
+  clearButtonHidden: {
+    display: 'none',
+  },
   row: {
     flexDirection: 'row',
   },
-  cellContainer: {
+  cell: {
     width: sideSize,
     height: sideSize,
     backgroundColor: 'white',
@@ -106,11 +162,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cellContainerEmpty: {
+  cellEmpty: {
     backgroundColor: 'beige',
   },
-  cellContainerSelected: {
+  cellSelected: {
     backgroundColor: 'pink',
+  },
+  cellTryShown: {
+    backgroundColor: 'magenta',
   },
   cellButton: {
     width: sideSize,
@@ -121,11 +180,8 @@ const styles = StyleSheet.create({
   cellText: {
     fontSize: 24,
   },
-  clearButton: {
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: '#F7F7F7',
-    padding: 8,
-    width: sideSize,
-  }
+  cellTryText: {
+    color: '#fff',
+    fontSize: 18,
+  },
 });

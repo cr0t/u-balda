@@ -4,7 +4,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "ai": "babel-node --presets es2015 ai.js"
   },
   "dependencies": {
     "expo": "^32.0.0",
@@ -15,6 +16,8 @@
     "react-navigation": "^3.3.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-expo": "^5.0.0"
   },
   "private": true

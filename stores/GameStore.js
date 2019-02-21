@@ -2,12 +2,13 @@ import { decorate, observable, action, computed } from 'mobx';
 
 class GameStore {
   CONFIG = {
-    size: 6,
+    size: 5,
     turnLength: 120, // seconds
   };
 
   initialWord = '';
   vocabulary; // configure it from outside
+  ai;
 
   cells = [];
   selectedCells = [];
@@ -88,6 +89,17 @@ class GameStore {
     this._stopTimer();
     this._resetTimer();
     this._startTimer();
+
+    if (this.currentPlayer.name == 'A.I.') {
+      // we need to know cells index to put new characted
+      // and character
+      setTimeout(() => {
+        const guess = this.ai.findWord(this.cells);
+        const { index, character, words } = guess;
+        this.selectedCells[index] = 1;
+        this.endTurn(words[0], character);
+      }, 0);
+    }
   }
 
   endTurn(word = '', singleChar = '') {
@@ -98,8 +110,11 @@ class GameStore {
       word: word
     });
 
+    if (singleChar !== '') {
+      this._addCharToBoard(singleChar);
+    }
+
     this._updateScore(currentPlayer);
-    this._addCharToBoard(singleChar);
     this.startTurn();
   }
 

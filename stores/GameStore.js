@@ -17,6 +17,7 @@ class GameStore {
   secondsRemaining = 0;
   moves = [];
   showPromptDialog = false;
+  showWinnerDialog = false;
 
   constructor() {
     this._initCells();
@@ -66,10 +67,13 @@ class GameStore {
     this.previousCellPressed = -1;
   }
 
-  startGame(initialWord) {
-    this.initialWord = initialWord;
+  startGame() {
+    this.initialWord = this.vocabulary.getRandomWord(this.fieldSize);
+    this._initCells();
+    this._initPlayers();
+    this.moves = [];
 
-    const initialWordAsArray = initialWord.split('');
+    const initialWordAsArray = this.initialWord.split('');
     let idxDelta = Math.floor(this.fieldSize / 2) * this.fieldSize;
     if (this.fieldSize % 2 === 0) {
       idxDelta -= this.fieldSize;
@@ -79,6 +83,7 @@ class GameStore {
       this.cells[idx + idxDelta] = char;
     });
 
+    this.closeWinnerDialog();
     this.startTurn();
   }
 
@@ -91,15 +96,21 @@ class GameStore {
     this._startTimer();
 
     if (this.currentPlayer.name == 'A.I.') {
-      // we need to know cells index to put new characted
-      // and character
-      setTimeout(() => {
-        const guess = this.ai.findWord(this.cells);
+      const guess = this.ai.findWord(this.cells, this.usedWords);
+      if (guess) {
         const { index, character, words } = guess;
         this.selectedCells[index] = 1;
         this.endTurn(words[0], character);
-      }, 0);
+      }
+      else {
+        this.endGame();
+      }
     }
+  }
+
+  endGame() {
+    this._stopTimer();
+    this.openWinnerDialog();
   }
 
   endTurn(word = '', singleChar = '') {
@@ -120,7 +131,7 @@ class GameStore {
 
   tryWord(word, singleChar) {
     const wordExists = this.vocabulary.exists(word);
-    const usedWord = this.moves.map((m) => { return m['word'] }).includes(word);
+    const usedWord = this.usedWords.includes(word);
     const usedAsInitial = (word === this.initialWord);
     const usedYet = (usedWord || usedAsInitial);
 
@@ -169,6 +180,14 @@ class GameStore {
 
   openPromptDialog() {
     this.showPromptDialog = true;
+  }
+
+  closeWinnerDialog() {
+    this.showWinnerDialog = false;
+  }
+
+  openWinnerDialog() {
+    this.showWinnerDialog = true;
   }
 
   get fieldSize() {
@@ -221,6 +240,14 @@ class GameStore {
   get selectedCellsCount() {
     return this.selectedCells.filter(cell => cell >= 1).length;
   }
+
+  get usedWords() {
+    return [this.initialWord, this.moves.map((m) => { return m['word'] })].flat();
+  }
+
+  get winner() {
+    return this.players['A'].score > this.players['B'].score ? this.players['A'] : this.players['B'];
+  }
 }
 
 decorate(GameStore, {
@@ -231,12 +258,18 @@ decorate(GameStore, {
   secondsRemaining: observable,
   moves: observable,
   showPromptDialog: observable,
+  showWinnerDialog: observable,
+  usedWords: computed,
+  winner: computed,
   markCellSelected: action,
   startGame: action,
   startTurn: action,
+  endGame: action,
   endTurn: action,
   closePromptDialog: action,
   openPromptDialog: action,
+  closeWinnerDialog: action,
+  openWinnerDialog: action,
 });
 
 const gameStore = new GameStore();

@@ -12,18 +12,16 @@ import PlayerView from './PlayerView';
 import TimerView from './TimerView';
 import MovesLogView from './MovesLogView';
 import PromptModalView from './Prompt/PromptModalView';
+import WinnerModalView from './WinnerModalView';
 
 const GameView = inject('GameStore')(observer(class GameView extends React.Component {
   componentDidMount() {
-    const { GameStore } = this.props;
-    const word = GameStore.vocabulary.getRandomWord(GameStore.fieldSize);
-
-    GameStore.startGame(word);
+    this.props.GameStore.startGame();
   }
 
   render() {
     const { GameStore } = this.props;
-    const { playerOne, playerTwo, currentPlayer, secondsRemaining, moves, readyForTry, showPromptDialog } = GameStore;
+    const { playerOne, playerTwo, currentPlayer, secondsRemaining, moves, readyForTry, showPromptDialog, showWinnerDialog } = GameStore;
     const showPromptModal = (readyForTry && showPromptDialog);
 
     return (
@@ -46,6 +44,7 @@ const GameView = inject('GameStore')(observer(class GameView extends React.Compo
           <BoardView />
         </View>
         {showPromptModal ? <PromptModalView /> : null}
+        {showWinnerDialog ? <WinnerModalView /> : null}
         {/* <GameStoreDebugView/> */}
       </View>
     );

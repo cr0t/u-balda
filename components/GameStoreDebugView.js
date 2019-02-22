@@ -15,6 +15,7 @@ const GameStoreDebugView = inject('GameStore')(observer(class GameStoreDebugView
         <Text>PlayerTwo: [{GameStore.playerTwo.name}, {GameStore.playerTwo.score}, {GameStore.currentPlayer === GameStore.playerTwo ? 'current' : ''}]</Text>
         <Text>SecondsRemaining: {GameStore.secondsRemaining}</Text>
         <Text>ReadyForTry and prompt: [{GameStore.readyForTry}, {GameStore.prompt}]</Text>
+        <Text>Show Dialogs: [prompt: {GameStore.showPromptDialog ? 'true' : 'false'}, winner: {GameStore.showPromptDialog ? 'true' : 'false'}]</Text>
       </View>
     );
   }

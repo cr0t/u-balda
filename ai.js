@@ -54,6 +54,14 @@ const cellsComplex = [
 // Fastest is findWord#3x3
 // ✨  Done in 24.91s.
 
+// After removing unnecessary words candidates sorting
+// findWord#3x3 x 2, 954 ops / sec ±0.62 % (87 runs sampled)
+// findWord#4x4 x 1, 495 ops / sec ±1.98 % (88 runs sampled)
+// findWord#5x5 x 882 ops / sec ±2.13 % (84 runs sampled)
+// findWord#complex x 24.29 ops / sec ±2.05 % (42 runs sampled)
+// Fastest is findWord#3x3
+// ✨  Done in 24.94s.
+
 const suite = new Benchmark.Suite;
 
 suite.add('findWord#3x3', function () {

@@ -6,24 +6,32 @@ import {
   Text,
   View
 } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 
 const WinnerModalView = inject('GameStore')(observer(class WinnerModalView extends React.Component {
   render() {
     const { GameStore } = this.props;
     const { winner } = GameStore;
+    const { navigate } = this.props.navigation;
 
     return (
       <Modal transparent={true}>
         <View style={styles.container}>
           <Text>Winner is {winner.name} with {winner.score} points.</Text>
-          <Button title="Restart" onPress={() => { GameStore.startGame(); }} />
+          <Button
+            title="Go home"
+            onPress={() => {
+              GameStore.closeWinnerDialog();
+              navigate('Home');
+            }}
+          />
         </View>
       </Modal>
     );
   }
 }));
-export default WinnerModalView;
+export default withNavigation(WinnerModalView);
 
 const styles = StyleSheet.create({
   container: {

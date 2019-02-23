@@ -1,8 +1,9 @@
+import { InteractionManager } from 'react-native';
 import { decorate, observable, action, computed } from 'mobx';
 
 class GameStore {
-  CONFIG = {
-    size: 5,
+  DEFAULT_CONFIG = {
+    fieldSize: 5,
     turnLength: 120, // seconds
   };
 
@@ -10,6 +11,8 @@ class GameStore {
   vocabulary; // configure it from outside
   ai;
 
+  fieldSize;
+  turnLength;
   cells = [];
   selectedCells = [];
   previousCellPressed = -1;
@@ -20,12 +23,14 @@ class GameStore {
   showWinnerDialog = false;
 
   constructor() {
+    this.fieldSize = this.DEFAULT_CONFIG.fieldSize;
+    this.turnLength = this.DEFAULT_CONFIG.turnLength;
     this._initCells();
     this._initPlayers();
   }
 
   _initCells() {
-    const cellsCount = this.CONFIG.size ** 2;
+    const cellsCount = this.fieldSize ** 2;
 
     this.cells = Array(cellsCount).fill('');
     this.selectedCells = Array(cellsCount).fill(0);
@@ -34,7 +39,7 @@ class GameStore {
   _initPlayers() {
     this.players = {
       'A': {
-        name: 'First Player',
+        name: 'Human',
         score: 0,
       },
       'B': {
@@ -58,19 +63,17 @@ class GameStore {
   }
 
   _resetTimer() {
-    this.secondsRemaining = this.CONFIG.turnLength;
+    this.secondsRemaining = this.turnLength;
   }
 
   clearSelectedCells() {
-    const cellsCount = this.CONFIG.size ** 2;
+    const cellsCount = this.fieldSize ** 2;
     this.selectedCells = Array(cellsCount).fill(0);
     this.previousCellPressed = -1;
   }
 
   startGame() {
     this.initialWord = this.vocabulary.getRandomWord(this.fieldSize);
-    this._initCells();
-    this._initPlayers();
     this.moves = [];
 
     const initialWordAsArray = this.initialWord.split('');
@@ -96,15 +99,17 @@ class GameStore {
     this._startTimer();
 
     if (this.currentPlayer.name == 'A.I.') {
-      const guess = this.ai.findWord(this.cells, this.usedWords);
-      if (guess) {
-        const { index, character, words } = guess;
-        this.selectedCells[index] = 1;
-        this.endTurn(words[0], character);
-      }
-      else {
-        this.endGame();
-      }
+      InteractionManager.runAfterInteractions(() => {
+        const guess = this.ai.findWord(this.cells, this.usedWords);
+        if (guess) {
+          const { index, character, words } = guess;
+          this.selectedCells[index] = 1;
+          this.endTurn(words[0], character);
+        }
+        else {
+          this.endGame();
+        }
+      });
     }
   }
 
@@ -126,7 +131,17 @@ class GameStore {
     }
 
     this._updateScore(currentPlayer);
-    this.startTurn();
+
+    if (!this.gameFinished()) {
+      this.startTurn();
+    }
+    else {
+      this.endGame();
+    }
+  }
+
+  gameFinished() {
+    return (this.cells.filter(c => c !== '').length === 0);
   }
 
   tryWord(word, singleChar) {
@@ -190,8 +205,21 @@ class GameStore {
     this.showWinnerDialog = true;
   }
 
-  get fieldSize() {
-    return this.CONFIG.size;
+  setFieldSize(newSize) {
+    this.fieldSize = newSize;
+    this._initCells();
+  }
+
+  setTurnLength(newLength) {
+    this.turnLength = newLength;
+  }
+
+  setPlayerOneName(newName) {
+    this.players['A'].name = newName;
+  }
+
+  setPlayerTwoName(newName) {
+    this.players['B'].name = newName;
   }
 
   get playerOne() {
@@ -251,6 +279,8 @@ class GameStore {
 }
 
 decorate(GameStore, {
+  fieldSize: observable,
+  turnLength: observable,
   cells: observable,
   selectedCells: observable,
   previousCellPressed: observable,
@@ -270,6 +300,10 @@ decorate(GameStore, {
   openPromptDialog: action,
   closeWinnerDialog: action,
   openWinnerDialog: action,
+  setFieldSize: action,
+  setTurnLength: action,
+  setPlayerOneName: action,
+  setPlayerTwoName: action,
 });
 
 const gameStore = new GameStore();

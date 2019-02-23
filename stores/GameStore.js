@@ -49,6 +49,11 @@ class GameStore {
     };
   }
 
+  _initScore() {
+    this.players['A'].score = 0;
+    this.players['B'].score = 0;
+  }
+
   _startTimer() {
     this.turnInterval = setInterval(() => {
       this.secondsRemaining -= 1;
@@ -73,6 +78,8 @@ class GameStore {
   }
 
   startGame() {
+    this._initCells();
+    this._initScore();
     this.initialWord = this.vocabulary.getRandomWord(this.fieldSize);
     this.moves = [];
 
@@ -141,7 +148,7 @@ class GameStore {
   }
 
   gameFinished() {
-    return (this.cells.filter(c => c !== '').length === 0);
+    return (this.cells.filter(c => c === '').length === 0);
   }
 
   tryWord(word, singleChar) {

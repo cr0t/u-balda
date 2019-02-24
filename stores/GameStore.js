@@ -4,7 +4,7 @@ import { decorate, observable, action, computed } from 'mobx';
 class GameStore {
   DEFAULT_CONFIG = {
     fieldSize: 5,
-    turnLength: 120, // seconds
+    turnLength: 180, // seconds
   };
 
   initialWord = '';
@@ -97,7 +97,7 @@ class GameStore {
     this.startTurn();
   }
 
-  startTurn() {
+  async startTurn() {
     // clear board and other temporals
     this.closePromptDialog();
     this.clearSelectedCells();
@@ -106,17 +106,19 @@ class GameStore {
     this._startTimer();
 
     if (this.currentPlayer.name == 'A.I.') {
-      InteractionManager.runAfterInteractions(() => {
-        const guess = this.ai.findWord(this.cells, this.usedWords);
-        if (guess) {
-          const { index, character, words } = guess;
-          this.selectedCells[index] = 1;
-          this.endTurn(words[0], character);
-        }
-        else {
-          this.endGame();
-        }
-      });
+      setTimeout(() => {
+        InteractionManager.runAfterInteractions(() => {
+          const guess = this.ai.findWord(this.cells, this.usedWords);
+          if (guess) {
+            const { index, character, words } = guess;
+            this.selectedCells[index] = 1;
+            this.endTurn(words[0], character);
+          }
+          else {
+            this.endGame();
+          }
+        });
+      }, 500);
     }
   }
 
@@ -315,3 +317,8 @@ decorate(GameStore, {
 
 const gameStore = new GameStore();
 export default gameStore;
+
+// Artificial sleep() method that we use to
+// function _sleep(ms) {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// }

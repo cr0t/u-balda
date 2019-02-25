@@ -74,29 +74,13 @@ const cellsHard = [
 // findWord#complex x 20.02 ops / sec ±1.50 % (36 runs sampled)
 // ✨  Done in 25.05s.
 
-// After adding hard board example - 5x5 with one empty cell
+// After adding hard board example - 5x5 with one empty cell, and updated Graph#_build (visited.includes(newIdx) => visited[nIdx])
 // findWord#3x3 x 1, 817 ops / sec ±1.61 % (84 runs sampled)
 // findWord#4x4 x 1, 066 ops / sec ±2.19 % (85 runs sampled)
 // findWord#5x5 x 686 ops / sec ±2.31 % (85 runs sampled)
 // findWord#complex x 19.95 ops / sec ±2.61 % (36 runs sampled)
 // findWord#hard x 0.03 ops / sec ±1.13 % (5 runs sampled)
 // ✨  Done in 315.60s.
-
-// After adding check for path existence by checking its prefix
-// findWord#3x3 x 2, 024 ops / sec ±2.80 % (84 runs sampled)
-// findWord#4x4 x 1, 454 ops / sec ±2.93 % (86 runs sampled)
-// findWord#5x5 x 1, 064 ops / sec ±2.69 % (85 runs sampled)
-// findWord#complex x 98.02 ops / sec ±3.77 % (68 runs sampled)
-// findWord#hard x 0.33 ops / sec ±0.82 % (5 runs sampled)
-// ✨  Done in 55.34s.
-
-// After upgrading Graph#_build (visited.includes(newIdx) => visited[nIdx])
-// findWord#3x3 x 2, 528 ops / sec ±1.21 % (85 runs sampled)
-// findWord#4x4 x 1, 808 ops / sec ±1.76 % (86 runs sampled)
-// findWord#5x5 x 1, 284 ops / sec ±2.09 % (88 runs sampled)
-// findWord#complex x 101 ops / sec ±2.96 % (70 runs sampled)
-// findWord#hard x 0.38 ops / sec ±0.64 % (5 runs sampled)
-// ✨  Done in 51.36s.
 
 const suite = new Benchmark.Suite;
 
@@ -114,4 +98,10 @@ suite.add('findWord#3x3', function () {
   console.log(String(event.target));
 }).run({ 'async': true });
 
-// console.log('--findWord', ai.findWord(cellsComplex));
+// const cellsCycle = [
+//   '',  'з', 'а',
+//   'р', 'а', 'б',
+//   '',  '',  '',
+// ];
+
+// console.log('--findWord', ai.findWord(cellsHard));

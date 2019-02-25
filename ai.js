@@ -82,20 +82,28 @@ const cellsHard = [
 // findWord#hard x 0.03 ops / sec ±1.13 % (5 runs sampled)
 // ✨  Done in 315.60s.
 
-// const suite = new Benchmark.Suite;
+// After adding check for path existence by checking its prefix
+// findWord#3x3 x 2, 024 ops / sec ±2.80 % (84 runs sampled)
+// findWord#4x4 x 1, 454 ops / sec ±2.93 % (86 runs sampled)
+// findWord#5x5 x 1, 064 ops / sec ±2.69 % (85 runs sampled)
+// findWord#complex x 98.02 ops / sec ±3.77 % (68 runs sampled)
+// findWord#hard x 0.33 ops / sec ±0.82 % (5 runs sampled)
+// ✨  Done in 55.34s.
 
-// suite.add('findWord#3x3', function () {
-//   ai.findWord(cells3);
-// }).add('findWord#4x4', function () {
-//   ai.findWord(cells4);
-// }).add('findWord#5x5', function () {
-//   ai.findWord(cells5);
-// }).add('findWord#complex', function () {
-//   ai.findWord(cellsComplex);
-// }).add('findWord#hard', function () {
-//   ai.findWord(cellsHard);
-// }).on('cycle', function (event) {
-//   console.log(String(event.target));
-// }).run({ 'async': true });
+const suite = new Benchmark.Suite;
 
-console.log('--findWord', ai.findWord(cellsComplex));
+suite.add('findWord#3x3', function () {
+  ai.findWord(cells3);
+}).add('findWord#4x4', function () {
+  ai.findWord(cells4);
+}).add('findWord#5x5', function () {
+  ai.findWord(cells5);
+}).add('findWord#complex', function () {
+  ai.findWord(cellsComplex);
+}).add('findWord#hard', function () {
+  ai.findWord(cellsHard);
+}).on('cycle', function (event) {
+  console.log(String(event.target));
+}).run({ 'async': true });
+
+// console.log('--findWord', ai.findWord(cellsComplex));

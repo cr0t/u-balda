@@ -90,6 +90,14 @@ const cellsHard = [
 // findWord#hard x 0.33 ops / sec ±0.82 % (5 runs sampled)
 // ✨  Done in 55.34s.
 
+// After upgrading Graph#_build (visited.includes(newIdx) => visited[nIdx])
+// findWord#3x3 x 2, 528 ops / sec ±1.21 % (85 runs sampled)
+// findWord#4x4 x 1, 808 ops / sec ±1.76 % (86 runs sampled)
+// findWord#5x5 x 1, 284 ops / sec ±2.09 % (88 runs sampled)
+// findWord#complex x 101 ops / sec ±2.96 % (70 runs sampled)
+// findWord#hard x 0.38 ops / sec ±0.64 % (5 runs sampled)
+// ✨  Done in 51.36s.
+
 const suite = new Benchmark.Suite;
 
 suite.add('findWord#3x3', function () {

@@ -38,6 +38,14 @@ const cellsComplex = [
   '',  'т', '',  '',  '',
 ];
 
+const cellsHard = [
+  'ш', 'т', 'ф', 'а', 'н',
+  'д', 'р', 'а', 'з', 'а',
+  'г', 'о', 'г', 'о', 'т',
+  'у', 'н', 'я', 'п', 'ь',
+  'б', 'ь', 'т', 'ь', '',
+];
+
 // Without any optimizations:
 // findWord#3x3 x 66.20 ops / sec ±2.33 % (64 runs sampled)
 // findWord#4x4 x 21.52 ops / sec ±2.56 % (38 runs sampled)
@@ -66,16 +74,28 @@ const cellsComplex = [
 // findWord#complex x 20.02 ops / sec ±1.50 % (36 runs sampled)
 // ✨  Done in 25.05s.
 
-const suite = new Benchmark.Suite;
+// After adding hard board example - 5x5 with one empty cell
+// findWord#3x3 x 1, 817 ops / sec ±1.61 % (84 runs sampled)
+// findWord#4x4 x 1, 066 ops / sec ±2.19 % (85 runs sampled)
+// findWord#5x5 x 686 ops / sec ±2.31 % (85 runs sampled)
+// findWord#complex x 19.95 ops / sec ±2.61 % (36 runs sampled)
+// findWord#hard x 0.03 ops / sec ±1.13 % (5 runs sampled)
+// ✨  Done in 315.60s.
 
-suite.add('findWord#3x3', function () {
-  ai.findWord(cells3);
-}).add('findWord#4x4', function () {
-  ai.findWord(cells4);
-}).add('findWord#5x5', function () {
-  ai.findWord(cells5);
-}).add('findWord#complex', function () {
-  ai.findWord(cellsComplex);
-}).on('cycle', function (event) {
-  console.log(String(event.target));
-}).run({ 'async': true });
+// const suite = new Benchmark.Suite;
+
+// suite.add('findWord#3x3', function () {
+//   ai.findWord(cells3);
+// }).add('findWord#4x4', function () {
+//   ai.findWord(cells4);
+// }).add('findWord#5x5', function () {
+//   ai.findWord(cells5);
+// }).add('findWord#complex', function () {
+//   ai.findWord(cellsComplex);
+// }).add('findWord#hard', function () {
+//   ai.findWord(cellsHard);
+// }).on('cycle', function (event) {
+//   console.log(String(event.target));
+// }).run({ 'async': true });
+
+console.log('--findWord', ai.findWord(cellsComplex));

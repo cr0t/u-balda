@@ -1,41 +1,40 @@
 import Benchmark from 'benchmark';
 
-const Vocabulary = require('./lib/Vocabulary').default;
-const ArtificialIntelligence = require('./lib/ArtificialIntelligence').default;
+import Vocabulary from './lib/Vocabulary';
+import AI from './lib/AI';
 
 const DATA = require('./data/2011freq.json');
-
 const vocabulary = new Vocabulary();
 vocabulary.loadWordsData(DATA);
-const ai = new ArtificialIntelligence(vocabulary);
+const ai = new AI(vocabulary);
 
 const cells3 = [
-  '',  '',  '',
+  '', '', '',
   'р', 'а', 'б',
-  '',  '',  '',
+  '', '', '',
 ];
 
 const cells4 = [
-  '',  '',  '',  '',
+  '', '', '', '',
   'п', 'л', 'о', 'в',
-  '',  '',  '',  '',
-  '',  '',  '',  '',
+  '', '', '', '',
+  '', '', '', '',
 ];
 
 const cells5 = [
-  '',  '',  '',  '',  '',
-  '',  '',  '',  '',  '',
+  '', '', '', '', '',
+  '', '', '', '', '',
   'б', 'а', 'л', 'д', 'а',
-  '',  '',  '',  '',  '',
-  '',  '',  '',  '',  '',
+  '', '', '', '', '',
+  '', '', '', '', '',
 ];
 
 const cellsComplex = [
-  '',  '',  'к', '',  '',
-  '',  'к', 'о', 'о', '',
+  '', '', 'к', '', '',
+  '', 'к', 'о', 'о', '',
   'б', 'а', 'ч', 'к', 'и',
-  '',  'к', '',  'а', 'м',
-  '',  'т', '',  '',  '',
+  '', 'к', '', 'а', 'м',
+  '', 'т', '', '', '',
 ];
 
 const cellsHard = [
@@ -60,27 +59,13 @@ const cellsHard = [
 // findWord#complex x 22.77 ops / sec ±2.38 % (40 runs sampled)
 // ✨  Done in 24.91s.
 
-// After removing unnecessary words candidates sorting
-// findWord#3x3 x 2, 954 ops / sec ±0.62 % (87 runs sampled)
-// findWord#4x4 x 1, 495 ops / sec ±1.98 % (88 runs sampled)
-// findWord#5x5 x 882 ops / sec ±2.13 % (84 runs sampled)
-// findWord#complex x 24.29 ops / sec ±2.05 % (42 runs sampled)
-// ✨  Done in 24.94s.
-
-// After fixing a bug in Graph#getChains method - it was reducing number of chains
-// findWord#3x3 x 1, 727 ops / sec ±3.34 % (81 runs sampled)
-// findWord#4x4 x 1, 023 ops / sec ±2.42 % (86 runs sampled)
-// findWord#5x5 x 640 ops / sec ±2.67 % (84 runs sampled)
-// findWord#complex x 20.02 ops / sec ±1.50 % (36 runs sampled)
-// ✨  Done in 25.05s.
-
-// After adding hard board example - 5x5 with one empty cell, and updated Graph#_build (visited.includes(newIdx) => visited[nIdx])
-// findWord#3x3 x 1, 817 ops / sec ±1.61 % (84 runs sampled)
-// findWord#4x4 x 1, 066 ops / sec ±2.19 % (85 runs sampled)
-// findWord#5x5 x 686 ops / sec ±2.31 % (85 runs sampled)
-// findWord#complex x 19.95 ops / sec ±2.61 % (36 runs sampled)
-// findWord#hard x 0.03 ops / sec ±1.13 % (5 runs sampled)
-// ✨  Done in 315.60s.
+// Rewrite AI from scratch, add HARD case
+// findWord#3x3 x 2, 199 ops / sec ±2.36 % (81 runs sampled)
+// findWord#4x4 x 1, 106 ops / sec ±1.72 % (83 runs sampled)
+// findWord#5x5 x 610 ops / sec ±7.49 % (76 runs sampled)
+// findWord#complex x 38.12 ops / sec ±2.00 % (56 runs sampled)
+// findWord#hard x 0.15 ops / sec ±5.80 % (5 runs sampled)
+// ✨  Done in 93.13s.
 
 const suite = new Benchmark.Suite;
 
@@ -98,10 +83,30 @@ suite.add('findWord#3x3', function () {
   console.log(String(event.target));
 }).run({ 'async': true });
 
-// const cellsCycle = [
-//   '',  'з', 'а',
-//   'р', 'а', 'б',
-//   '',  '',  '',
-// ];
+// --- character л
+// _fillPaths: 2.670ms
+// _optimizePathsFront: 11.137ms
+// _generateChains: 122.628ms
+// _findWords: 283.101ms
+// character: 420.195ms
+// ...
+// --- character п
+// _fillPaths: 1.966ms
+// _optimizePathsFront: 14.744ms
+// _generateChains: 173.214ms
+// _findWords: 280.459ms
+// character: 470.942ms
+// ...
+// --- character ф
+// _fillPaths: 2.212ms
+// _optimizePathsFront: 11.890ms
+// _generateChains: 198.747ms
+// _findWords: 280.511ms
+// character: 493.904ms
+
+//--- entryPoint: 4758.724ms
 
 // console.log('--findWord', ai.findWord(cellsHard));
+
+// get the most long words from vocabulary
+// console.log([...vocabulary.words].sort((a, b) => b.length - a.length).slice(0, 100).map(w => [w, w.length]));

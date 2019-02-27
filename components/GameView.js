@@ -13,6 +13,7 @@ import TimerView from './TimerView';
 import MovesLogView from './MovesLogView';
 import PromptModalView from './Prompt/PromptModalView';
 import WinnerModalView from './WinnerModalView';
+import AITurnModalView from './AITurnModalView';
 
 const GameView = inject('GameStore')(observer(class GameView extends React.Component {
   componentDidMount() {
@@ -21,7 +22,7 @@ const GameView = inject('GameStore')(observer(class GameView extends React.Compo
 
   render() {
     const { GameStore } = this.props;
-    const { playerOne, playerTwo, currentPlayer, secondsRemaining, moves, readyForTry, showPromptDialog, showWinnerDialog } = GameStore;
+    const { playerOne, playerTwo, currentPlayer, secondsRemaining, moves, readyForTry, showPromptDialog, showWinnerDialog, showAITurnDialog } = GameStore;
     const showPromptModal = (readyForTry && showPromptDialog);
 
     return (
@@ -43,8 +44,9 @@ const GameView = inject('GameStore')(observer(class GameView extends React.Compo
         <View style={styles.board}>
           <BoardView />
         </View>
-        {showPromptModal ? <PromptModalView /> : null}
-        {showWinnerDialog ? <WinnerModalView /> : null}
+        {showPromptModal && <PromptModalView />}
+        {showWinnerDialog && <WinnerModalView />}
+        {showAITurnDialog && <AITurnModalView />}
         {/* <GameStoreDebugView/> */}
       </View>
     );

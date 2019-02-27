@@ -21,6 +21,7 @@ class GameStore {
   moves = [];
   showPromptDialog = false;
   showWinnerDialog = false;
+  showAITurnDialog = false;
 
   constructor() {
     this.fieldSize = this.DEFAULT_CONFIG.fieldSize;
@@ -94,19 +95,23 @@ class GameStore {
     });
 
     this.closeWinnerDialog();
+    this.closeAITurnDialog();
     this.startTurn();
   }
 
   startTurn() {
     // clear board and other temporals
     this.closePromptDialog();
+    this.closeAITurnDialog();
     this.clearSelectedCells();
     this._stopTimer();
     this._resetTimer();
     this._startTimer();
 
     if (this.currentPlayer.name == 'A.I.') {
-      this._turnAI();
+      this.openAITurnDialog();
+      // give a timeout for rendering
+      setTimeout(() => this._turnAI(), 1000);
     }
   }
 
@@ -126,6 +131,7 @@ class GameStore {
 
   endGame() {
     this._stopTimer();
+    this.closeAITurnDialog();
     this.openWinnerDialog();
   }
 
@@ -214,6 +220,14 @@ class GameStore {
 
   openWinnerDialog() {
     this.showWinnerDialog = true;
+  }
+
+  closeAITurnDialog() {
+    this.showAITurnDialog = false;
+  }
+
+  openAITurnDialog() {
+    this.showAITurnDialog = true;
   }
 
   setFieldSize(newSize) {
@@ -311,6 +325,8 @@ decorate(GameStore, {
   openPromptDialog: action,
   closeWinnerDialog: action,
   openWinnerDialog: action,
+  closeAITurnDialog: action,
+  openAITurnDialog: action,
   setFieldSize: action,
   setTurnLength: action,
   setPlayerOneName: action,

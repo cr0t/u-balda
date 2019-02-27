@@ -19,11 +19,13 @@ const SettingsScreen = inject('GameStore')(observer(class SettingsScreen extends
     maxFieldSize: 6,
     minTurnLength: 60,
     maxTurnLength: 300,
+    minTurnLimit: 1,
+    maxTurnLimit: 5,
   }
 
   render() {
     const { GameStore } = this.props;
-    const { playerOne, playerTwo, fieldSize, turnLength } = GameStore;
+    const { playerOne, playerTwo, fieldSize, turnLength, aiTurnLimit } = GameStore;
     const turnLengthMinutes = turnLength / 60;
 
     return (
@@ -72,6 +74,17 @@ const SettingsScreen = inject('GameStore')(observer(class SettingsScreen extends
             step={60}
             value={turnLength}
             onValueChange={(v) => GameStore.setTurnLength(v)}
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text>A.I. turn limit ({aiTurnLimit}s):</Text>
+          <Slider
+            minimumValue={this.LIMITS['minTurnLimit']}
+            maximumValue={this.LIMITS['maxTurnLimit']}
+            step={1}
+            value={aiTurnLimit}
+            onValueChange={(v) => GameStore.setTurnLimit(v)}
           />
         </View>
       </View>

@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     flex: 1,
     justifyContent: 'center',
-    marginHorizontal: 20,
     marginTop: 32,
   },
   indicator: {

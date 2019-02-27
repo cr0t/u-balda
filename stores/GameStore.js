@@ -97,7 +97,7 @@ class GameStore {
     this.startTurn();
   }
 
-  async startTurn() {
+  startTurn() {
     // clear board and other temporals
     this.closePromptDialog();
     this.clearSelectedCells();
@@ -106,20 +106,22 @@ class GameStore {
     this._startTimer();
 
     if (this.currentPlayer.name == 'A.I.') {
-      setTimeout(() => {
-        InteractionManager.runAfterInteractions(() => {
-          const guess = this.ai.findWord(this.cells, this.usedWords);
-          if (guess) {
-            const { index, character, words } = guess;
-            this.selectedCells[index] = 1;
-            this.endTurn(words[0], character);
-          }
-          else {
-            this.endGame();
-          }
-        });
-      }, 500);
+      this._turnAI();
     }
+  }
+
+  _turnAI() {
+    InteractionManager.runAfterInteractions(() => {
+      const guess = this.ai.findWord(this.cells, this.usedWords);
+      if (guess) {
+        const { index, character, words } = guess;
+        this.selectedCells[index] = 1;
+        this.endTurn(words[0], character);
+      }
+      else {
+        this.endGame();
+      }
+    });
   }
 
   endGame() {

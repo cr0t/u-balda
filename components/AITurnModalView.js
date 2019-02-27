@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   Modal,
   StyleSheet,
   Text,
@@ -11,6 +12,9 @@ export default class AITurnModalView extends React.Component {
     return (
       <Modal transparent={true}>
         <View style={styles.container}>
+          <View style={styles.indicator}>
+            <ActivityIndicator />
+          </View>
           <Text>A.I. is looking for word...</Text>
         </View>
       </Modal>
@@ -26,5 +30,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 20,
     marginTop: 32,
+  },
+  indicator: {
+    marginBottom: 10,
   },
 });

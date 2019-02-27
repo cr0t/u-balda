@@ -118,7 +118,8 @@ class GameStore {
 
   _turnAI() {
     InteractionManager.runAfterInteractions(() => {
-      const guess = this.ai.findWord(this.cells, this.usedWords);
+      const guess = this.ai.findWord(this.cells, this.aiTurnLimit, this.usedWords);
+
       if (guess) {
         const { index, character, words } = guess;
         this.selectedCells[index] = 1;

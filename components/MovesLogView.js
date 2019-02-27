@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ScrollView,
   StyleSheet,
   Text,
   View
@@ -47,17 +48,26 @@ export default class MovesLogView extends React.Component {
     }
 
     return(
-      <View style={styles.container}>
-        {columns}
-      </View>
+      <ScrollView
+        style={styles.container}
+        ref={ref => this.scrollView = ref}
+        onContentSizeChange={() => this.scrollView.scrollToEnd({ animated: true }) }
+      >
+        <View style={styles.columnsWrapper}>
+          {columns}
+        </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  columnsWrapper: {
+    flex: 1,
     alignItems: 'flex-start',
-    height: 50,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

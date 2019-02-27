@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   },
   moves: {
     flex: 1,
+    paddingBottom: 20,
   },
   board: {
     flex: 0,

@@ -70,15 +70,15 @@ const cellsHard = [
 const suite = new Benchmark.Suite;
 
 suite.add('findWord#3x3', function () {
-  ai.findWord(cells3);
+  ai.findWord(cells3, 10);
 }).add('findWord#4x4', function () {
-  ai.findWord(cells4);
+  ai.findWord(cells4, 10);
 }).add('findWord#5x5', function () {
-  ai.findWord(cells5);
+  ai.findWord(cells5, 10);
 }).add('findWord#complex', function () {
-  ai.findWord(cellsComplex);
+  ai.findWord(cellsComplex, 10);
 }).add('findWord#hard', function () {
-  ai.findWord(cellsHard);
+  ai.findWord(cellsHard, 10);
 }).on('cycle', function (event) {
   console.log(String(event.target));
 }).run({ 'async': true });
@@ -106,7 +106,7 @@ suite.add('findWord#3x3', function () {
 
 //--- entryPoint: 4758.724ms
 
-// console.log('--findWord', ai.findWord(cellsHard));
+// console.log('--findWord', ai.findWord(cellsHard, 10));
 
 // get the most long words from vocabulary
 // console.log([...vocabulary.words].sort((a, b) => b.length - a.length).slice(0, 100).map(w => [w, w.length]));

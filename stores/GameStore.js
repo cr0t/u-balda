@@ -19,6 +19,7 @@ class GameStore {
   players = {};
   secondsRemaining = 0;
   moves = [];
+  aiTurnLimit = 4; // seconds
   showPromptDialog = false;
   showWinnerDialog = false;
   showAITurnDialog = false;
@@ -117,7 +118,8 @@ class GameStore {
 
   _turnAI() {
     InteractionManager.runAfterInteractions(() => {
-      const guess = this.ai.findWord(this.cells, this.usedWords);
+      const guess = this.ai.findWord(this.cells, this.aiTurnLimit, this.usedWords);
+
       if (guess) {
         const { index, character, words } = guess;
         this.selectedCells[index] = 1;
@@ -239,6 +241,10 @@ class GameStore {
     this.turnLength = newLength;
   }
 
+  setTurnLimit(newLimit) {
+    this.aiTurnLimit = newLimit;
+  }
+
   setPlayerOneName(newName) {
     this.players['A'].name = newName;
   }
@@ -312,6 +318,7 @@ decorate(GameStore, {
   players: observable,
   secondsRemaining: observable,
   moves: observable,
+  aiTurnLimit: observable,
   showPromptDialog: observable,
   showWinnerDialog: observable,
   usedWords: computed,
@@ -329,6 +336,7 @@ decorate(GameStore, {
   openAITurnDialog: action,
   setFieldSize: action,
   setTurnLength: action,
+  setTurnLimit: action,
   setPlayerOneName: action,
   setPlayerTwoName: action,
 });

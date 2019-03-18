@@ -4,6 +4,18 @@ It's a simple pet project to learn more about React, React Native, and MobX. It'
 
 The project is developed with the great [Expo](https://expo.io/) toolkit.
 
+## How it looks like
+
+<table>
+  <tr>
+    <td><img src="https://user-images.githubusercontent.com/113878/54531750-81557580-499f-11e9-86a4-cd9bc46d121d.png"/></td>
+    <td><img src="https://user-images.githubusercontent.com/113878/54531751-81557580-499f-11e9-9f1b-2126e649d2c7.png"/></td>
+    <td><img src="https://user-images.githubusercontent.com/113878/54531752-81557580-499f-11e9-9c34-a02f1b44eefa.png"/></td>
+    <td><img src="https://user-images.githubusercontent.com/113878/54531753-81557580-499f-11e9-99e0-ee5ff7f7acba.png"/></td>
+    <td><img src="https://user-images.githubusercontent.com/113878/54531754-81ee0c00-499f-11e9-9e50-dc710dc5868e.png"/></td>
+  </tr>
+</table>
+
 ## How to run it
 
 Clone, install dependencies, run it. You need `node`, `yarn` or `npm` (whichever you prefer) on your development machine, and Expo app installed to your phone (to run it on a real device over the local network, and play with the code if you want).

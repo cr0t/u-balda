@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "U-Balda",
+    "description": "Humble attempt to implement a classic Russian word game 'Balda'. Writtent with React, React Native, and MobX.",
     "slug": "u-balda",
     "privacy": "public",
     "sdkVersion": "32.0.0",
@@ -8,7 +9,8 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
+    "githubUrl": "https://github.com/cr0t/u-balda",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {

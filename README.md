@@ -6,6 +6,8 @@ The project is developed with the great [Expo](https://expo.io/) toolkit.
 
 ## How it looks like
 
+### Static screenshots
+
 <table>
   <tr>
     <td><img src="https://user-images.githubusercontent.com/113878/54531750-81557580-499f-11e9-86a4-cd9bc46d121d.png"/></td>
@@ -16,17 +18,35 @@ The project is developed with the great [Expo](https://expo.io/) toolkit.
   </tr>
 </table>
 
+### Gameplay
+
+<img src="https://user-images.githubusercontent.com/113878/54594028-355f0b00-4a49-11e9-8fbb-63a08bd37ca0.gif"/>
+
 ## How to run it
 
-Clone, install dependencies, run it. You need `node`, `yarn` or `npm` (whichever you prefer) on your development machine, and Expo app installed to your phone (to run it on a real device over the local network, and play with the code if you want).
+Clone this repo, install dependencies, run it.
 
-You can read more about Expo [here](https://expo.io/learn), but basically after you installed prerequisites you can simply run:
+### Install dependencies
 
+You need `node`, `yarn` or `npm` (whichever you prefer) on your development machine, and Expo app installed to your phone (to run it on a real device over the local network, and play with the code if you want).
+
+To install dependencies you need to run:
+
+```bash
+yarn install
 ```
-$ yarn start
+
+### Run it
+
+To run this app on your machine (and then using an emulator or real device) simply call this command:
+
+```bash
+yarn start
 ```
 
-It will open a browser with development console and QR code. Just open camera, put QR in frame and it will ask you if you want to open it in Expo app.
+It will open a browser with log console and visible QR code. Take your phone (with Expo app installed), open camera app, put QR in frame and it will prompt if you want to open it in Expo app.
+
+> If you want to use Expo in development and write your own apps, please, read more about Expo [here](https://expo.io/learn), and about its installation [here](https://docs.expo.io/versions/latest/introduction/installation/).
 
 ## Vocabulary and references
 

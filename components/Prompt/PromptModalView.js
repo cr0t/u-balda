@@ -14,11 +14,19 @@ import GuessInput from './GuessInput';
 const PromptModalView = inject('GameStore')(observer(class PromptModalView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { guessChar: '' };
+    this.state = {
+      guessChar: '',
+      wordExists: true, // this and the next variable are used to show alerts
+      usedYet: false
+    };
   }
 
   componentDidMount() {
-    this.setState({ guessChar: '' });
+    this.setState({
+      guessChar: '',
+      wordExists: true, // reset any alerts were shown to user previously
+      usedYet: false
+    });
   }
 
   tryWord() {
@@ -33,17 +41,27 @@ const PromptModalView = inject('GameStore')(observer(class PromptModalView exten
       return char;
     }).join('');
 
-    GameStore.tryWord(guessWord, guessChar);
+    let result = GameStore.tryWord(guessWord, guessChar);
+    if (typeof result !== 'undefined') {
+      this.setState({
+        wordExists: result['wordExists'],
+        usedYet: result['usedYet']
+      });
+    }
   }
 
   render() {
     const { GameStore } = this.props;
     const { secondsRemaining, prompt } = GameStore;
-    const { guessChar } = this.state;
+    const { guessChar, wordExists, usedYet } = this.state;
     const confirmDisabled = (guessChar.length === 0);
 
     const guessCells = prompt.map((char, idx) => {
-      return <GuessInput key={'guess-input-' + idx} value={char} onChangeText={(guessChar) => this.setState({ guessChar })} />;
+      return <GuessInput
+        key={'guess-input-' + idx}
+        value={char}
+        onChangeText={(guessChar) => this.setState({ guessChar, wordExists: true, usedYet: false })}
+      />;
     });
 
     return (
@@ -56,6 +74,11 @@ const PromptModalView = inject('GameStore')(observer(class PromptModalView exten
 
           <View style={styles.content}>
             {guessCells}
+          </View>
+
+          <View style={styles.alerts}>
+            {!wordExists && <Text style={styles.alert}>That word does not exist</Text>}
+            {usedYet && <Text style={styles.alert}>We already used that word</Text>}
           </View>
 
           <View style={styles.footer}>
@@ -85,6 +108,15 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
+  },
+  alerts: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  alert: {
+    color: 'red',
   },
   footer: {
     flex: 0,

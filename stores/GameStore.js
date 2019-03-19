@@ -172,6 +172,13 @@ class GameStore {
     if (wordExists && !usedYet) {
       this.endTurn(word, singleChar);
     }
+    else {
+      // we use this information for notifications
+      return {
+        wordExists,
+        usedYet
+      };
+    }
   }
 
   markCellSelected(idx) {

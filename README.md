@@ -20,7 +20,11 @@ The project is developed with the great [Expo](https://expo.io/) toolkit.
 
 ### Gameplay
 
-<img src="https://user-images.githubusercontent.com/113878/54594028-355f0b00-4a49-11e9-8fbb-63a08bd37ca0.gif"/>
+<table>
+  <tr>
+    <td><img src="https://user-images.githubusercontent.com/113878/54594028-355f0b00-4a49-11e9-8fbb-63a08bd37ca0.gif"/></td>
+  </tr>
+</table>
 
 ## How to run it
 

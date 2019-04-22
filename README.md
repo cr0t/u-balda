@@ -52,6 +52,16 @@ It will open a browser with log console and visible QR code. Take your phone (wi
 
 > If you want to use Expo in development and write your own apps, please, read more about Expo [here](https://expo.io/learn), and about its installation [here](https://docs.expo.io/versions/latest/introduction/installation/).
 
+## TODO
+
+- [ ] users should be able to pick (or download?) different vocabularies, different language
+- [ ] lookup words (thesaurus or via Internet?)
+- [ ] change "Game over" screen: users want to observe the game log
+- [ ] multiplayer (over Internet, over Bluetooth?!)
+- [ ] add difficulty level (how "A.I." is limited in words search)
+- [ ] update "A.I." algorithm, so it can search for words with the new letter in the middle
+- [ ] add graphics (icons, internal screens graphics, etc.)
+
 ## Vocabulary and references
 
 I used Russian vocabulary (with usage frequency data) from this [page](http://dict.ruslang.ru/freq.php). During the implementation process I also found other resources, which you can find interesting:
